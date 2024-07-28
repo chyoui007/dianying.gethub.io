@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注册</title>   
+</head>
+<body>
+    <div class="container">
+        <h1>会员注册</h1>
+        <form id="registerForm">
+            <input type="email" placeholder="邮箱" class="sr" required>
+            <input type="password" placeholder="密码" class="sr" required>
+            <input type="password" placeholder="再次输入密码" class="sr" required>
+            <input type="submit" value="注册" class="xx">
+        </form>
+        <div class="zc">
+            <a href="denglu.html">登陆界面</a><br>
+            <a href="index.html">主页</a>
+        </div>
+    </div>   
+</body>
+
+<style>
+	body, html {
+	    margin: 0;
+	    padding: 0;
+	    height: 100%;
+	    width: 100%;
+	    font-family: Roboto, sans-serif;
+	    background: url('https://w.wallhaven.cc/full/j3/wallhaven-j32gqy.jpg') center/cover no-repeat;
+	    display: flex;
+	    align-items: center;
+	    justify-content: center;
+	    position: relative;
+	    overflow: hidden;
+	}
+
+	.container {
+	    display: flex;
+	    flex-direction: column;
+	    align-items: center;
+	    background: rgba(255, 255, 255, 0.35);
+	    padding: 20px;
+	    border-radius: 10px;
+	    z-index: 2; /* 确保容器在画布之上 */
+	    width: 100%; /* 确保容器占据整个宽度 */
+	    max-width: 400px; /* 设置容器最大宽度 */
+	    box-sizing: border-box; /* 确保 padding 不影响宽度计算 */
+	}
+
+	.xx, .sr {
+	    width: 100%; /* 宽度设置为100%，以占据父容器的全部宽度 */
+	    /*max-width: 200px; /* 设置最大宽度 */
+	    border: none;
+	    margin: 10px 0;
+	    padding: 10px;
+	    border-radius: 10px;
+	    font-size: 150%;
+	    box-sizing: border-box; /* 确保 padding 不影响宽度计算 */
+	}
+
+	.xx {
+	    background-color: #8B7E66;
+	    color: #ffffff;
+	    border-radius: 100px;
+	    font-size: 200%;
+	    cursor: pointer;
+	}
+
+	.sr {
+	    background: rgba(255, 255, 255, 0.35);
+	    height: 50px;
+	}
+
+	.zc {
+	    color: #960eb1;
+	    font-size: 150%;
+	    text-align: center;
+	}
+
+	canvas {
+	    position: fixed;
+	    top: 0;
+	    left: 0;
+	    width: 100%;
+	    height: 100%;
+	    z-index: 1; /* 确保画布在容器之下 */
+	    pointer-events: none; /* 禁用画布的事件处理 */
+	}
+</style>
+
+<canvas></canvas>
+<script>
+    const canvas = document.querySelector("canvas");
+    const ctx = canvas.getContext("2d");
+
+    /* 设置画布大小 */
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    /* 随机生成流星雨 */
+    const meteors = Array.from({ length: 120 }, createMeteor);
+
+    function createMeteor() {
+        return {
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            len: Math.random() * 80 + 10,
+            speed: Math.random() * 4 + 4,
+            radius: Math.random() * 2 + 1,
+            nextX: Math.random() * 0.06 - 0.03,
+            nextY: Math.random() * 0.06 - 0.03,
+            isFall: false
+        };
+    }
+
+    function drawMeteor() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        meteors.forEach(meteor => {
+            ctx.beginPath();
+            ctx.arc(meteor.x, meteor.y, meteor.radius, 0, Math.PI * 2);
+            ctx.fillStyle = "white";
+            ctx.fill();
+
+            meteor.x += meteor.nextX * meteor.speed;
+            meteor.y += meteor.nextY * meteor.speed;
+
+            if (meteor.y > canvas.height + meteor.len) {
+                Object.assign(meteor, createMeteor());
+            }
+        });
+    }
+
+    function startAnimation() {
+        requestAnimationFrame(startAnimation);
+        drawMeteor();
+    }
+
+    startAnimation();
+
+    // 确保表单提交事件被正确处理
+    const registerForm = document.getElementById('registerForm');
+    registerForm.addEventListener('submit', function(event) {
+        event.preventDefault(); // 阻止默认提交行为
+        alert('注册成功！');
+    });
+</script>
+</html>
